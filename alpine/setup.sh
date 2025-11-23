@@ -1,5 +1,5 @@
 # Replace /etc/apk/repositories and update packages
-cp apks.config /etc/apk/repositories &&
+cp alpine/apks.config /etc/apk/repositories &&
 apk update
 
 # Install default packages
@@ -34,5 +34,14 @@ addgroup ssh-secure
 # Start docker
 service docker start
 
-# Reboot
-reboot
+# Disable root account password
+passwd -d root
+
+# Setup cloud init
+setup-cloud-init
+
+# Delete folder
+rm -r homelab-setup
+
+# Shutdown
+poweroff
