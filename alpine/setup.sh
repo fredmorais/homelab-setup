@@ -1,5 +1,5 @@
 # Replace /etc/apk/repositories and update packages
-mv apks.config /etc/apk/repositories
+cp apks.config /etc/apk/repositories &&
 apk update
 
 # Install default packages
@@ -22,11 +22,11 @@ rc-update add qemu-guest-agent
 rc-update add docker boot
 
 apk add \
-    py3-netifaces \
-    cloud-init
+	py3-netifaces \
+	cloud-init
 
 # Replace /etc/ssh/sshd_config
-mv ssh.config /etc/ssh/sshd_config
+cp sshd.config /etc/ssh/sshd_config
 
 # Create group for allowing secure ssh
 addgroup ssh-secure
@@ -35,4 +35,4 @@ addgroup ssh-secure
 service docker start
 
 # Reboot
-#reboot
+reboot

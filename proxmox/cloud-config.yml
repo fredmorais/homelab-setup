@@ -1,0 +1,25 @@
+#cloud-config
+users:
+  - name: ansible
+    gecos: ansible
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    groups: sudo,ssh-secure
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDMxnYSFzeeDmgbMBZ3xvS0hzEdUvwy+TR+tThwh+vwfwX3ItvZR61/LQUJUpG13OG9gqw/QAinx9tMwymG0+5RoX5EjUEzunW744w3q4/AtycMjwio/naSwZgsd7ITTgwibL9TgFriXym0wHStkY/aufbfpbJqADyGyTNWalR6z4zLOm6IkHoU7z8QbVP/v9NbE7pmxfyPgfCZJ7ADJxmRCRfhQLjoJgjyI/teJoHVyHe3fKIvz1pkkdt8Rlf4Xx56E/iApH0DIjE3i2g+lob9tbQPf4RZHebR2mFbxaGtcAWLdvOHBiVRFSHpZfHqmvT8PUY+ZegxBqIRNx5dp+QbqLUzxgANh8stSFqH3mpZbCuezWUGAVR2HqcTXd5tYy0SobDR8HNBR4aRQdPyVAnoZmq6HU3jaq8U5axFZf8CjllxUg3YEgil6XUY4tNc8ja8lc8eVNRUA+NnS5PvIDAR5iW9AYP66J/0bMxeEZeKFgx2a1ucdPOVAb3PUqOZbLNCKn2faGAZGEDZnKt7i+m4/JbU3CyCegIhpRA6MTWozljmMB3UDTGKqlY8fMVkJkFu6YVncaN1Cz0ZBVomtH2hf3Uhm/A0S2okgqKER+3Tc1gpMurYVLHYhcyr493RaheAcM+qQJYxctlzd7glMGKUsXzz83p4odLbLsp7Wqn/nQ== ansible@ansible
+    passwd: $6$rounds=4096$N2CzjWelQcBt48$nNyIeaoGQTUEvUj2mba8d7t1oO2g1pmuAHMwdqwOEB61dwLgN8W.FPsu79R2FeMuBjc2PeCwHlzEx4xso3Fe0
+    lock-passwd: false
+  - name: fredmorais
+    gecos: Fred
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    groups: sudo,ssh-secure
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH03n/oyskkKGXC6HmYQw2AYrg9B6xc5vMy91X074l0G fredmorais@fredmorais
+    passwd: $6$rounds=4096$N2CzjWelQcBt48$nNyIeaoGQTUEvUj2mba8d7t1oO2g1pmuAHMwdqwOEB61dwLgN8W.FPsu79R2FeMuBjc2PeCwHlzEx4xso3Fe0
+    lock-passwd: false
+package_upgrade: true
+keyboard:
+  layout: us
+timezone: Europe/Lisbon
+final_message: "The system is up, after $UPTIME seconds"
