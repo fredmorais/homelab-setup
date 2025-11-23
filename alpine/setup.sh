@@ -1,5 +1,5 @@
 # Replace /etc/apk/repositories and update packages
-cp alpine/apks.config /etc/apk/repositories &&
+cp homelab-setup/alpine/apks.config /etc/apk/repositories &&
 apk update
 
 # Install default packages
@@ -26,7 +26,7 @@ apk add \
 	cloud-init
 
 # Replace /etc/ssh/sshd_config
-cp sshd.config /etc/ssh/sshd_config
+cp homelab-setup/alpine/sshd.config /etc/ssh/sshd_config
 
 # Create group for allowing secure ssh
 addgroup ssh-secure
