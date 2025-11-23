@@ -9,4 +9,4 @@
 
 setup-alpine
 
-apk add git && wget https://github.com/fredmorais/alpine-setup/setup.sh
+apk add wget && wget https://raw.githubusercontent.com/fredmorais/homelab-setup/refs/heads/main/alpine/setup.sh && setup.sh

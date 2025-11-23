@@ -1,5 +1,7 @@
 # Enable community repository and update packages
-apk add nano && nano /etc/apk/repositories && apk update
+apk add nano
+sed -i "/^#.*http://dl-cdn.alpinelinux.org/alpine/v3.22/community/ s/^#//" "/etc/apk/repositories"
+apk update
 
 # Install default packages
 apk add --no-cache \
