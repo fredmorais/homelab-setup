@@ -1,11 +1,11 @@
-# Enable community repository and update packages
-apk add nano
-sed -i "/^#.*http://dl-cdn.alpinelinux.org/alpine/v3.22/community/ s/^#//" "/etc/apk/repositories"
+# Replace /etc/apk/repositories and update packages
+mv apks.config /etc/apk/repositories
 apk update
 
 # Install default packages
 apk add --no-cache \
 	docker \
+	nano \
 	docker-cli-compose \
 	gcompat \
 	libstdc++ \
@@ -25,13 +25,8 @@ apk add \
     py3-netifaces \
     cloud-init
 
-# Change /etc/ssh/sshd_config
-sed -i '/^PermitRootLogin/c\PermitRootLogin no' /etc/ssh/sshd_config
-sed -i '/^AllowGroups/c\AllowGroups ssh-secure' /etc/ssh/sshd_config
-sed -i '/^PubkeyAuthentication/c\PubkeyAuthentication yes' /etc/ssh/sshd_config
-sed -i '/^PasswordAuthentication/c\PasswordAuthentication no' /etc/ssh/sshd_config
-sed -i '/^PermitEmptyPasswords/c\PermitEmptyPasswords no' /etc/ssh/sshd_config
-sed -i '/^AllowTcpForwarding/c\AllowTcpForwarding yes' /etc/ssh/sshd_config
+# Replace /etc/ssh/sshd_config
+mv ssh.config /etc/ssh/sshd_config
 
 # Create group for allowing secure ssh
 addgroup ssh-secure
@@ -40,4 +35,4 @@ addgroup ssh-secure
 service docker start
 
 # Reboot
-reboot
+#reboot
