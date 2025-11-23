@@ -1,0 +1,195 @@
+apk add --no-cache nano openssh docker docker-cli-compose gcompat libstdc++ curl bash git &&
+
+rc-update add sshd &&
+service sshd start &&
+
+adduser -D -g ansible ansible &&
+adduser -D -g fredmorais fredmorais &&
+
+passwd -u ansible &&
+passwd -u fredmorais &&
+
+addgroup ssh-secure &&
+
+addgroup fredmorais ssh-secure &&
+addgroup fredmorais ssh-secure &&
+
+mkdir -p /home/ansible/.ssh &&
+mkdir -p /home/fredmorais/.ssh &&
+
+chmod 700 /home/ansible/.ssh &&
+chmod 700 /home/fredmorais/.ssh &&
+
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDMxnYSFzeeDmgbMBZ3xvS0hzEdUvwy+TR+tThwh+vwfwX3ItvZR61/LQUJUpG13OG9gqw/QAinx9tMwymG0+5RoX5EjUEzunW744w3q4/AtycMjwio/naSwZgsd7ITTgwibL9TgFriXym0wHStkY/aufbfpbJqADyGyTNWalR6z4zLOm6IkHoU7z8QbVP/v9NbE7pmxfyPgfCZJ7ADJxmRCRfhQLjoJgjyI/teJoHVyHe3fKIvz1pkkdt8Rlf4Xx56E/iApH0DIjE3i2g+lob9tbQPf4RZHebR2mFbxaGtcAWLdvOHBiVRFSHpZfHqmvT8PUY+ZegxBqIRNx5dp+QbqLUzxgANh8stSFqH3mpZbCuezWUGAVR2HqcTXd5tYy0SobDR8HNBR4aRQdPyVAnoZmq6HU3jaq8U5axFZf8CjllxUg3YEgil6XUY4tNc8ja8lc8eVNRUA+NnS5PvIDAR5iW9AYP66J/0bMxeEZeKFgx2a1ucdPOVAb3PUqOZbLNCKn2faGAZGEDZnKt7i+m4/JbU3CyCegIhpRA6MTWozljmMB3UDTGKqlY8fMVkJkFu6YVncaN1Cz0ZBVomtH2hf3Uhm/A0S2okgqKER+3Tc1gpMurYVLHYhcyr493RaheAcM+qQJYxctlzd7glMGKUsXzz83p4odLbLsp7Wqn/nQ== ansible@ansible" | tee /home/ansible/.ssh/authorized_keys &&
+
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH03n/oyskkKGXC6HmYQw2AYrg9B6xc5vMy91X074l0G fredmorais@MacBook-Pro.local" | tee /home/fredmorais/.ssh/authorized_keys &&
+
+chmod 600 /home/ansible/.ssh/authorized_keys &&
+chmod 600 /home/fredmorais/.ssh/authorized_keys &&
+
+chown -R ansible:ansible /home/ansible/.ssh &&
+chown -R fredmorais:fredmorais /home/fredmorais/.ssh &&
+
+rc-update add docker boot &&
+service docker start
+
+
+
+nano /etc/passwd
+
+
+
+nano /etc/ssh/sshd_config
+
+
+# /etc/ssh/sshd_config.high-security
+# Template for high-security servers
+
+# Network settings
+Port 22
+AddressFamily inet
+ListenAddress 0.0.0.0
+
+# Host keys (only secure algorithms)
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKey /etc/ssh/ssh_host_rsa_key
+
+# Authentication
+PermitRootLogin no
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+AuthenticationMethods publickey
+
+# User restrictions
+AllowGroups ssh-secure
+MaxAuthTries 2
+MaxSessions 3
+LoginGraceTime 30
+
+# Cryptography settings (paranoid mode)
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
+KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org
+HostKeyAlgorithms ssh-ed25519,rsa-sha2-512,rsa-sha2-256
+
+# Strict security settings
+StrictModes yes
+IgnoreRhosts yes
+HostbasedAuthentication no
+PermitUserEnvironment no
+X11Forwarding no
+AllowAgentForwarding no
+PrintMotd no
+
+# For VSCode
+AllowTcpForwarding yes
+PermitTunnel yes
+
+# Logging
+SyslogFacility AUTH
+LogLevel VERBOSE
+
+# Session settings
+ClientAliveInterval 300
+ClientAliveCountMax 0
+TCPKeepAlive yes
+UseDNS no
+
+# Banner
+Banner /etc/ssh/security-banner.txt
+
+
+// CLOUD INIT
+
+apk add git && wget https://github.com/fredmorais/alpine-setup/start.sh
+
+setup-alpineal
+
+apk add nano && nano /etc/apk/repositories && apk update
+
+apk add --no-cache \
+	docker \
+	docker-cli-compose \
+	gcompat \
+	libstdc++ \
+	curl \
+	bash \
+	git \
+	util-linux \
+  	e2fsprogs-extra \
+   	qemu-guest-agent \
+   	sudo
+
+rc-update add qemu-guest-agent
+
+
+apk add \
+    py3-netifaces \
+    cloud-init
+
+visudo
+
+nano /etc/cloud/cloud.cfg
+
+nano /etc/ssh/sshd_config
+PermitRootLogin no
+AllowGroups ssh-secure
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+# For VSCode
+AllowTcpForwarding yes
+
+
+passwd -u ansible
+
+addgroup ssh-secure
+
+addgroup ansible ssh-secure
+
+mkdir -p /home/ansible/.ssh &&
+
+chmod 700 /home/ansible/.ssh &&
+
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDMxnYSFzeeDmgbMBZ3xvS0hzEdUvwy+TR+tThwh+vwfwX3ItvZR61/LQUJUpG13OG9gqw/QAinx9tMwymG0+5RoX5EjUEzunW744w3q4/AtycMjwio/naSwZgsd7ITTgwibL9TgFriXym0wHStkY/aufbfpbJqADyGyTNWalR6z4zLOm6IkHoU7z8QbVP/v9NbE7pmxfyPgfCZJ7ADJxmRCRfhQLjoJgjyI/teJoHVyHe3fKIvz1pkkdt8Rlf4Xx56E/iApH0DIjE3i2g+lob9tbQPf4RZHebR2mFbxaGtcAWLdvOHBiVRFSHpZfHqmvT8PUY+ZegxBqIRNx5dp+QbqLUzxgANh8stSFqH3mpZbCuezWUGAVR2HqcTXd5tYy0SobDR8HNBR4aRQdPyVAnoZmq6HU3jaq8U5axFZf8CjllxUg3YEgil6XUY4tNc8ja8lc8eVNRUA+NnS5PvIDAR5iW9AYP66J/0bMxeEZeKFgx2a1ucdPOVAb3PUqOZbLNCKn2faGAZGEDZnKt7i+m4/JbU3CyCegIhpRA6MTWozljmMB3UDTGKqlY8fMVkJkFu6YVncaN1Cz0ZBVomtH2hf3Uhm/A0S2okgqKER+3Tc1gpMurYVLHYhcyr493RaheAcM+qQJYxctlzd7glMGKUsXzz83p4odLbLsp7Wqn/nQ== ansible@ansible" | tee /home/ansible/.ssh/authorized_keys 
+
+chmod 600 /home/ansible/.ssh/authorized_keys
+chown -R ansible:ansible /home/ansible/.ssh
+
+rc-update add docker boot &&
+service docker start
+
+
+passwd -d root
+setup-cloud-init
+poweroff
+
+
+
+
+
+
+
+
+
+users:
+  - name: fredmorais
+    gecos: "Fred"
+    groups: [sudo, ssh-secure]
+    shell: /bin/bash
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH03n/oyskkKGXC6HmYQw2AYrg9B6xc5vMy91X074l0G fredmorais@MacBook-Pro.local
+  - name: ansible
+    gecos: "Ansible"
+    groups: [sudo, ssh-secure]
+    shell: /bin/bash
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDMxnYSFzeeDmgbMBZ3xvS0hzEdUvwy+TR+tThwh+vwfwX3ItvZR61/LQUJUpG13OG9gqw/QAinx9tMwymG0+5RoX5EjUEzunW744w3q4/AtycMjwio/naSwZgsd7ITTgwibL9TgFriXym0wHStkY/aufbfpbJqADyGyTNWalR6z4zLOm6IkHoU7z8QbVP/v9NbE7pmxfyPgfCZJ7ADJxmRCRfhQLjoJgjyI/teJoHVyHe3fKIvz1pkkdt8Rlf4Xx56E/iApH0DIjE3i2g+lob9tbQPf4RZHebR2mFbxaGtcAWLdvOHBiVRFSHpZfHqmvT8PUY+ZegxBqIRNx5dp+QbqLUzxgANh8stSFqH3mpZbCuezWUGAVR2HqcTXd5tYy0SobDR8HNBR4aRQdPyVAnoZmq6HU3jaq8U5axFZf8CjllxUg3YEgil6XUY4tNc8ja8lc8eVNRUA+NnS5PvIDAR5iW9AYP66J/0bMxeEZeKFgx2a1ucdPOVAb3PUqOZbLNCKn2faGAZGEDZnKt7i+m4/JbU3CyCegIhpRA6MTWozljmMB3UDTGKqlY8fMVkJkFu6YVncaN1Cz0ZBVomtH2hf3Uhm/A0S2okgqKER+3Tc1gpMurYVLHYhcyr493RaheAcM+qQJYxctlzd7glMGKUsXzz83p4odLbLsp7Wqn/nQ== ansible@ansible
+
+# Configure SSH settings
+ssh_pwauth: false
+
